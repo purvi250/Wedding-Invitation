@@ -5,16 +5,16 @@ on **Saturday, 28 November 2026** at **Hotel Royal Residency, Saharanpur**.
 
 ## See it
 
-**Open the invitation: <https://allbotixtech-byte.github.io/Wedding/>**
+**Open the invitation: <https://purvi250.github.io/Wedding-Invitation/>**
 Tap the wax seal to start, with the sound on. It works on phones and on computers.
 
 The same invitation as a video (59.5 seconds, with music):
 
 | Video | Best for |
 |---|---|
-| [Vertical, 1080 × 1920](https://allbotixtech-byte.github.io/Wedding/reception-invitation/output/reception-invitation-vertical-1080x1920.mp4) | Phones, Instagram stories, WhatsApp status |
-| [Vertical, small file](https://allbotixtech-byte.github.io/Wedding/reception-invitation/output/reception-invitation-whatsapp-720x1280.mp4) | Sending in WhatsApp chats |
-| [Horizontal, 1920 × 1080](https://allbotixtech-byte.github.io/Wedding/reception-invitation/output/reception-invitation-horizontal-1920x1080.mp4) | TVs, laptops, projectors |
+| [Vertical, 1080 × 1920](https://purvi250.github.io/Wedding-Invitation/reception-invitation/output/reception-invitation-vertical-1080x1920.mp4) | Phones, Instagram stories, WhatsApp status |
+| [Vertical, small file](https://purvi250.github.io/Wedding-Invitation/reception-invitation/output/reception-invitation-whatsapp-720x1280.mp4) | Sending in WhatsApp chats |
+| [Horizontal, 1920 × 1080](https://purvi250.github.io/Wedding-Invitation/reception-invitation/output/reception-invitation-horizontal-1920x1080.mp4) | TVs, laptops, projectors |
 
 ## Run it on your own computer
 
