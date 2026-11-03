@@ -80,7 +80,13 @@
       ul.append(li);
     }
   });
-  if (!HAS_PROG) $$('#programme .card, [data-map-programme]').forEach((el) => el.remove());
+  // without a programme, page 2 shows the reception card (with the stage behind it) and page 3 the closing words
+  if (!HAS_PROG) {
+    $('#programme .card').replaceWith($('#reception .card'));
+    $('[data-map-programme]').replaceWith($('[data-map-reception]'));
+    const b2 = $$('#programme > .bg'), b3 = $$('#reception > .bg');
+    b2.forEach((im, i) => { const s = im.getAttribute('src'); im.setAttribute('src', b3[i].getAttribute('src')); b3[i].setAttribute('src', s); });
+  }
 
   // the two dates on the hero (one column when there is no programme)
   $$('[data-dates]').forEach((el) => {
