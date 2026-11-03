@@ -39,9 +39,9 @@ const open = async (mode) => {
 };
 try {
   if (only !== 'gif') {
-    // 1) photograph each page's artwork alone at 1.5x, as JPEG
+    // 1) photograph each page's artwork alone at 2x, as JPEG (the gold words are part of it)
     const art = await open('pdf');
-    await art.setViewport({ width: 1080, height: 1920, deviceScaleFactor: 1.5 });
+    await art.setViewport({ width: 1080, height: 1920, deviceScaleFactor: 2 });
     await art.evaluate(() => document.body.classList.add('art'));
     const shots = [];
     for (const id of await art.evaluate(() => [...document.querySelectorAll('.page')].map((p) => p.id))) {

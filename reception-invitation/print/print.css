@@ -28,8 +28,8 @@ a { color: inherit; text-decoration: none; }
    The soft shadows round the words belong to the artwork too: the words are made see-through in .art (their
    shadows still paint) and lose their shadows in .flat. A blurred shadow on PDF text becomes a masked image,
    and some phone viewers ignore the mask and paint it as a solid box over the neighbouring letters (the "i"
-   of "Tyagi" next to the "&" disappeared that way). The gold words are photographed whole (gold and shadow)
-   and printed again on top, so they show even in a viewer that cannot draw the gold. */
+   of "Tyagi" next to the "&" disappeared that way). The gold words are photographed whole and not printed
+   again: gold-gradient text needs a mask too, and an iPhone showed it as a solid bar after "SUNDARK". */
 .art .page :is(p, h1, h2, li), .art .page :is(p, h1, h2, li) * { color: transparent !important; -webkit-text-fill-color: transparent !important; }
 .art .watch { background: none; color: transparent; }
 .art .qr { background: none; }
@@ -38,10 +38,10 @@ a { color: inherit; text-decoration: none; }
 .flat .page :is(p, h1, h2, li), .flat .page :is(p, h1, h2, li) * { text-shadow: none !important; filter: none !important; }
 .flat .watch { box-shadow: none; }
 .flat .qr { box-shadow: 0 0 0 1px rgba(236, 204, 136, 0.8); }
-/* see-through gradients (the dates panel, the gold dividers, the light on the names) are photographed too */
+/* see-through gradients (the dates panel, the gold dividers) and the gold words are photographed only */
 .flat .dates { background: none; border-color: transparent; box-shadow: none; }
 .flat .dt-sep, .flat .card-rule { visibility: hidden; }
-.flat .shimmer { background-image: var(--gold-text); background-size: 100% 100%; }
+.flat .gold { visibility: hidden; }
 .flat .card { background: transparent; box-shadow: none; }
 .flat .card::before, .flat .card::after { display: none; }
 .page { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--night) center / cover no-repeat; break-after: page; page-break-after: always; }
