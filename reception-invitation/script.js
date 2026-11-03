@@ -31,6 +31,20 @@
   const SIGN = `${first(CFG.BRIDE_NAME)} & ${first(CFG.GROOM_NAME)}`;
   const DATE_LINE = [CFG.EVENT_DAY, CFG.EVENT_DATE].filter(Boolean).join(', ');
 
+  /* the programme: a second gathering before the reception (config PROGRAMME_*); empty = not shown anywhere */
+  const PROG = (CFG.PROGRAMME_EVENTS || []).filter((e) => e && e.name);
+  const HAS_PROG = PROG.length > 0;
+  const PROG_DATE_LINE = [CFG.PROGRAMME_DAY, CFG.PROGRAMME_DATE].filter(Boolean).join(', ');
+  const noYear = (s) => String(s || '').replace(/,?\s*\d{4}\s*$/, '');
+  const andList = (a) => (a.length > 1 ? `${a.slice(0, -1).join(', ')} & ${a[a.length - 1]}` : a[0] || '');
+  const PROG_WHAT = andList(PROG.map((e) => e.name));
+  const ICONS = {
+    diya: '<svg viewBox="0 0 48 48" aria-hidden="true"><path class="ic-flame" d="M24 4.5c3.6 5 6.4 9.4 6.4 13.2 0 4-2.9 6.8-6.4 6.8s-6.4-2.8-6.4-6.8c0-3.8 2.8-8.2 6.4-13.2z"/><path class="ic-core" d="M24 13.2c1.6 2.4 2.7 4.3 2.7 6 0 1.7-1.2 2.9-2.7 2.9s-2.7-1.2-2.7-2.9c0-1.7 1.1-3.6 2.7-6z"/><path class="ic-line" d="M5 28.5c6 1.4 12.4 2 19 2s13-.6 19-2c-1.3 6.8-8.8 11.4-19 11.4S6.3 35.3 5 28.5zM5 28.5l-3.2-2.1M19 40.4l-1.6 3.6h13.2L29 40.4"/></svg>',
+    dinner: '<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="ic-line" cx="24" cy="11.6" r="2.6"/><path class="ic-line" d="M7.5 33.5a16.5 16.5 0 0 1 33 0M3.5 36.5h41M9 40.5h30"/><path class="ic-shine" d="M14.6 26a10.6 10.6 0 0 1 6.2-6.4"/></svg>',
+    gem: '<svg viewBox="0 0 48 48" aria-hidden="true"><path class="ic-flame" d="M24 9l7.5 15L24 39l-7.5-15z"/></svg>',
+  };
+  const iconFor = (e) => ICONS[e.icon] || ICONS[/sundar|path|puja|pooja|aarti|katha|havan|jagran/i.test(e.name) ? 'diya' : /dinner|lunch|bhoj|food|feast/i.test(e.name) ? 'dinner' : 'gem'];
+
   function fillContent() {
     const put = (sel, fn) => $$(sel).forEach((el) => { el.textContent = fn(el) || ''; });
     put('[data-text]', (el) => TXT[el.dataset.text]);
@@ -44,7 +58,41 @@
     put('[data-address-inline]', () => CFG.VENUE_ADDRESS);
     const lines = (el, arr) => { el.textContent = ''; arr.filter(Boolean).forEach((l) => { const s = document.createElement('span'); s.textContent = l; el.append(s); }); };
     $$('[data-address]').forEach((el) => lines(el, CFG.VENUE_ADDRESS_LINES && CFG.VENUE_ADDRESS_LINES.length ? CFG.VENUE_ADDRESS_LINES : [CFG.VENUE_ADDRESS]));
-    $$('[data-foot]').forEach((el) => lines(el, [[CFG.EVENT_TYPE, DATE_LINE].filter(Boolean).join('  ·  '), CFG.VENUE_SHORT || CFG.VENUE_NAME]));
+    // programme: back of the card, final web screen; the two dates side by side on the envelope and in the closing frame
+    put('[data-prog-title]', () => CFG.PROGRAMME_TITLE || 'Programme');
+    put('[data-prog-day]', () => CFG.PROGRAMME_DAY);
+    put('[data-prog-date]', () => CFG.PROGRAMME_DATE);
+    put('[data-prog-date-line]', () => PROG_DATE_LINE);
+    put('[data-prog-address-inline]', () => CFG.PROGRAMME_VENUE_ADDRESS);
+    $$('[data-prog-address]').forEach((el) => lines(el, CFG.PROGRAMME_VENUE_LINES && CFG.PROGRAMME_VENUE_LINES.length ? CFG.PROGRAMME_VENUE_LINES : [CFG.PROGRAMME_VENUE_ADDRESS]));
+    $$('[data-prog-rows]').forEach((ul) => {
+      ul.textContent = '';
+      for (const e of PROG) {
+        const li = document.createElement('li'), ic = document.createElement('span'), n = document.createElement('span');
+        li.className = 'prog-row'; ic.className = 'prog-ic'; ic.innerHTML = iconFor(e); n.className = 'prog-name'; n.textContent = e.name;
+        li.append(ic, n);
+        if (e.time) { const d = document.createElement('i'), tm = document.createElement('b'); d.className = 'prog-dots'; tm.className = 'prog-time'; tm.textContent = e.time; li.append(d, tm); }
+        ul.append(li);
+      }
+    });
+    const dates = (el, compact) => {   // [programme day · date · what]  |  [reception day · date · what]
+      el.textContent = '';
+      const col = (day, date, what) => {
+        const c = document.createElement('div'); c.className = 'dt';
+        const p = (cls, text) => { if (!text) return; const x = document.createElement('p'); x.className = cls; x.textContent = text; c.append(x); };
+        if (compact) p('dt-date', [day, noYear(date)].filter(Boolean).join(', ')); else { p('dt-day', day); p('dt-date', noYear(date)); }
+        p('dt-what', what); return c;
+      };
+      const sep = document.createElement('i'); sep.className = 'dt-sep'; sep.setAttribute('aria-hidden', 'true');
+      el.append(col(CFG.PROGRAMME_DAY, CFG.PROGRAMME_DATE, PROG_WHAT), sep, col(CFG.EVENT_DAY, CFG.EVENT_DATE, CFG.EVENT_TYPE));
+    };
+    $$('[data-dates]').forEach((el) => { el.hidden = !HAS_PROG; if (HAS_PROG) dates(el, false); });
+    $('#envelope').classList.toggle('has-dates', HAS_PROG);
+    $$('[data-foot]').forEach((el) => {
+      if (HAS_PROG) { el.classList.add('dates', 'dates-night'); dates(el, true); }
+      else lines(el, [[CFG.EVENT_TYPE, DATE_LINE].filter(Boolean).join('  ·  '), CFG.VENUE_SHORT || CFG.VENUE_NAME]);
+    });
+    if (!HAS_PROG) $$('[data-prog]').forEach((el) => el.remove());
     $$('[data-monogram]').forEach((el) => { el.innerHTML = ''; const a = document.createElement('span'), b = document.createElement('i'), c = document.createElement('span'); a.textContent = first(CFG.BRIDE_NAME).charAt(0); b.textContent = '&'; c.textContent = first(CFG.GROOM_NAME).charAt(0); el.append(a, b, c); });
     // optional details: only shown when filled in, never as empty placeholders
     const opt = (sel, value) => $$(sel).forEach((el) => { el.hidden = !value; el.textContent = value || ''; });
@@ -192,6 +240,7 @@
     const sparkle = (sel, at, n = 22, d = 2.3) => sparkBursts.push({ ...rectOf(sel), t: at, d, n, seed: sparkBursts.length * 7 });
     sparkle('.c2 .t-name', 11.0); sparkle('.c3 .t-name', 17.0); sparkle('.c4 .t-line-accent', 26.0, 18);
     sparkle('.t-couple', 32.0, 30, 2.8); sparkle('.t-invite strong', 34.7, 16, 2); sparkle('.t-sign', 55.0, 26, 2.8);
+    if (HAS_PROG) sparkle('#card', 46.05, 30, 2.5); // a halo of sparkles round the card as it lands on the programme
 
     tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', lazy: false } });
     const reg = (x) => { gsap.utils.toArray(x).forEach((el) => touched.add(el)); return x; };
@@ -341,21 +390,47 @@
     fx({ petals: 0.3, fire: 0.25, dust: 0.85 }, 38.6, 1.2);
     set('#cardLayer', { autoAlpha: 0 }, 0); set('#cardLayer', { autoAlpha: 1 }, 38.9); hideAt('#cardLayer', T.s7 + 0.1);
     ft('#card', { opacity: 0, yPercent: 55, rotationX: 26, scale: 0.92, transformOrigin: '50% 100%' }, { opacity: 1, yPercent: 0, rotationX: 0, scale: 1, duration: 1.5, ease: 'power3.out' }, 38.95);
-    ft('.card-floral.tl', { opacity: 0, scale: 0.5, rotation: -16, transformOrigin: '30% 30%' }, { opacity: 1, scale: 1, rotation: 0, duration: 1.3, ease: 'back.out(1.3)' }, 39.6);
-    ft('.card-floral.br', { opacity: 0, scale: 0.5, rotation: -16, transformOrigin: '70% 70%' }, { opacity: 1, scale: 1, rotation: 0, duration: 1.3, ease: 'back.out(1.3)' }, 39.8);
-    ft('.card-shine', { backgroundPosition: '140% 0' }, { backgroundPosition: '-40% 0', duration: 1.4, ease: 'sine.inOut' }, 39.9);
+    ft('.card-front .card-floral.tl', { opacity: 0, scale: 0.5, rotation: -16, transformOrigin: '30% 30%' }, { opacity: 1, scale: 1, rotation: 0, duration: 1.3, ease: 'back.out(1.3)' }, 39.6);
+    ft('.card-front .card-floral.br', { opacity: 0, scale: 0.5, rotation: -16, transformOrigin: '70% 70%' }, { opacity: 1, scale: 1, rotation: 0, duration: 1.3, ease: 'back.out(1.3)' }, 39.8);
+    ft('.card-front .card-shine', { backgroundPosition: '140% 0' }, { backgroundPosition: '-40% 0', duration: 1.4, ease: 'sine.inOut' }, 39.9);
     // the details arrive quickly so that date and venue stay on screen, complete, for as long as possible
-    rise('.card-kicker', 40.0, { y: 1.4, dur: 0.75 });
-    const cn = $$('.card-names span');
-    wipe(cn[0], 40.4, 0.8); rise(cn[1], 40.8, { y: 0.8, dur: 0.45 }); wipe(cn[2], 40.95, 0.8);
-    ft('.card-rule', { opacity: 0, scaleX: 0.3 }, { opacity: 1, scaleX: 1, duration: 0.7 }, 41.4);
-    rise('.card-date', 41.7, { y: 1.4, dur: 0.8 }); rise('.card-time', 41.95, { y: 1.2, dur: 0.7 });
-    rise('.card-label', 42.15, { y: 1.2, dur: 0.65 }); rise('.card-venue', 42.4, { y: 1.4, dur: 0.8 });
-    rise($$('.card-address span'), 42.7, { y: 1, dur: 0.65, stagger: 0.13 }); rise('.card-rsvp', 43.2, { y: 1, dur: 0.65 });
-    sparkBursts.push({ x: 0.5 - (P ? 0.3 : 0.2), y: 0.5 - 0.02, w: P ? 0.6 : 0.4, h: 0.05, t: 41.7, d: 2.2, n: 14, seed: 91 });
+    // (half a second sooner still when the card has a programme on its back)
+    const S = HAS_PROG ? -0.5 : 0;
+    rise('.card-front .card-kicker', 40.0 + S, { y: 1.4, dur: 0.75 });
+    const cn = $$('.card-front .card-names span');
+    wipe(cn[0], 40.4 + S, 0.8); rise(cn[1], 40.8 + S, { y: 0.8, dur: 0.45 }); wipe(cn[2], 40.95 + S, 0.8);
+    ft('.card-front .card-rule', { opacity: 0, scaleX: 0.3 }, { opacity: 1, scaleX: 1, duration: 0.7 }, 41.4 + S);
+    rise('.card-front .card-date', 41.7 + S, { y: 1.4, dur: 0.8 }); rise('.card-front .card-time', 41.95 + S, { y: 1.2, dur: 0.7 });
+    rise('.card-front .card-label', 42.15 + S, { y: 1.2, dur: 0.65 }); rise('.card-front .card-venue', 42.4 + S, { y: 1.4, dur: 0.8 });
+    rise($$('.card-front .card-address span'), 42.7 + S, { y: 1, dur: 0.65, stagger: 0.13 }); rise('.card-front .card-rsvp', 43.2 + S, { y: 1, dur: 0.65 });
+    sparkBursts.push({ x: 0.5 - (P ? 0.3 : 0.2), y: 0.5 - 0.02, w: P ? 0.6 : 0.4, h: 0.05, t: 41.7 + S, d: 2.2, n: 14, seed: 91 });
     to('#card', { y: -0.9 * u, duration: 2.35, ease: 'sine.inOut', yoyo: true, repeat: 3 }, 40.7);
-    to('.card-shine', { backgroundPosition: '140% 0', duration: 0.01 }, 45.6);
-    to('.card-shine', { backgroundPosition: '-40% 0', duration: 1.7, ease: 'sine.inOut' }, 46.0);
+    if (HAS_PROG) {
+      /* the card turns over, in a burst of warm light, to the programme on its back */
+      set('#cardFlip', { transformPerspective: 190 * u, rotationY: 0, scale: 1 }, 0);
+      to('#cardFlip', { scale: 1.045, duration: 0.5, ease: 'sine.out' }, 44.7);
+      to('#cardFlip', { rotationY: 180, duration: 1.1, ease: 'power2.inOut' }, 45.1);
+      to('#cardFlip', { scale: 1, duration: 0.7, ease: 'sine.inOut' }, 45.95);
+      set('#cardGlow', { opacity: 0, scale: 0.75 }, 0);
+      to('#cardGlow', { opacity: 1, scale: 1.12, duration: 0.75, ease: 'sine.out' }, 45.1);
+      to('#cardGlow', { opacity: 0.38, scale: 1, duration: 1.7, ease: 'sine.inOut' }, 45.85);
+      to('#cardGlow', { opacity: 0, duration: 0.8, ease: 'sine.in' }, 50.1);
+      petalBursts.push({ t: 45.2, d: 2.3, kind: 'swirl', amount: 0.32, scale: 0.75 });
+      ft('.card-back .card-floral.tr', { opacity: 0, scale: 0.55, rotation: 16, transformOrigin: '70% 30%' }, { opacity: 1, scale: 1, rotation: 0, duration: 1.3, ease: 'back.out(1.3)' }, 45.95);
+      ft('.card-back .card-floral.bl', { opacity: 0, scale: 0.55, rotation: 16, transformOrigin: '30% 70%' }, { opacity: 1, scale: 1, rotation: 0, duration: 1.3, ease: 'back.out(1.3)' }, 46.1);
+      // the heading is already on the back as it comes round (past edge-on at 45.65); the details then write themselves in
+      rise('.card-back .card-kicker', 45.6, { y: 1.2, dur: 0.6 });
+      wipe('.card-back .cb-day', 45.75, 0.85);
+      rise('.card-back .cb-date', 46.0, { y: 1.2, dur: 0.7 });
+      ft('.card-back .card-rule', { opacity: 0, scaleX: 0.3 }, { opacity: 1, scaleX: 1, duration: 0.6 }, 46.3);
+      rise($$('.card-back .prog-row'), 46.45, { y: 1.3, dur: 0.7, stagger: 0.32 });
+      rise('.card-back .card-label', 47.1, { y: 1, dur: 0.6 });
+      rise($$('.card-back .card-address span'), 47.25, { y: 1, dur: 0.6, stagger: 0.13 });
+      ft('.card-back .card-shine', { backgroundPosition: '140% 0' }, { backgroundPosition: '-40% 0', duration: 1.7, ease: 'sine.inOut' }, 48.4);
+    } else {
+      to('.card-front .card-shine', { backgroundPosition: '140% 0', duration: 0.01 }, 45.6);
+      to('.card-front .card-shine', { backgroundPosition: '-40% 0', duration: 1.7, ease: 'sine.inOut' }, 46.0);
+    }
     to('#card', { opacity: 0, yPercent: -7, scale: 1.035, duration: 0.85, ease: 'power2.in' }, 50.2);
     to('#stageDim', { opacity: 0.42, duration: 1.3, ease: 'sine.inOut' }, 50.35); // keeps the stage softly out of focus behind the couple
 
@@ -455,15 +530,29 @@
       else if (started && e.key === 'ArrowLeft') seek(clock() - 3);
     });
     // final-screen helpers
-    const map = $('#btnMap'), cal = $('#btnCal');
-    if (CFG.SHOW_DIRECTIONS_BUTTON === false) map.remove();
-    else map.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent([CFG.VENUE_NAME, CFG.VENUE_ADDRESS].filter(Boolean).join(', '));
-    if (CFG.SHOW_CALENDAR_BUTTON === false || !/^\d{4}-\d{2}-\d{2}$/.test(CFG.EVENT_DATE_ISO || '')) cal.remove();
+    const mapUrl = (q) => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+    const map = $('#btnMap'), mapProg = $('#btnMapProg'), cal = $('#btnCal');
+    if (CFG.SHOW_DIRECTIONS_BUTTON === false) { map.remove(); if (mapProg) mapProg.remove(); }
+    else {
+      map.href = mapUrl([CFG.VENUE_NAME, CFG.VENUE_ADDRESS].filter(Boolean).join(', '));
+      if (mapProg) { if (CFG.PROGRAMME_VENUE_ADDRESS) mapProg.href = mapUrl(CFG.PROGRAMME_VENUE_ADDRESS); else mapProg.remove(); }
+    }
+    // calendar file: programme events at the times given (no end time is invented), the reception as an all-day entry
+    const ISO = /^\d{4}-\d{2}-\d{2}$/, esc = (s) => String(s || '').replace(/([,;\\])/g, '\\$1');
+    const calEvents = [];
+    if (HAS_PROG && ISO.test(CFG.PROGRAMME_DATE_ISO || '')) PROG.forEach((e, i) => calEvents.push({ id: `programme-${i}`, iso: CFG.PROGRAMME_DATE_ISO, at: e.at, title: `${e.name} — ${SIGN}`, where: CFG.PROGRAMME_VENUE_ADDRESS }));
+    if (ISO.test(CFG.EVENT_DATE_ISO || '')) calEvents.push({ id: 'reception', iso: CFG.EVENT_DATE_ISO, title: `${CFG.EVENT_TYPE} — ${SIGN}`, where: [CFG.VENUE_NAME, CFG.VENUE_ADDRESS].filter(Boolean).join(', ') });
+    if (CFG.SHOW_CALENDAR_BUTTON === false || !calEvents.length) cal.remove();
     else cal.addEventListener('click', () => {
-      const d = CFG.EVENT_DATE_ISO.replace(/-/g, ''), next = new Date(CFG.EVENT_DATE_ISO + 'T00:00:00Z'); next.setUTCDate(next.getUTCDate() + 1);
-      const d2 = next.toISOString().slice(0, 10).replace(/-/g, ''), esc = (s) => String(s || '').replace(/([,;\\])/g, '\\$1');
-      const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Reception Invitation//EN', 'BEGIN:VEVENT', `UID:reception-${d}@invitation`, `DTSTAMP:${d}T000000Z`, `DTSTART;VALUE=DATE:${d}`, `DTEND;VALUE=DATE:${d2}`, `SUMMARY:${esc(SIGN + ' — ' + CFG.EVENT_TYPE)}`, `LOCATION:${esc([CFG.VENUE_NAME, CFG.VENUE_ADDRESS].filter(Boolean).join(', '))}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
-      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'reception-save-the-date.ics'; document.body.append(a); a.click(); a.remove();
+      const out = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Reception Invitation//EN', 'CALSCALE:GREGORIAN'];
+      for (const ev of calEvents) {
+        const d = ev.iso.replace(/-/g, ''), hm = /^(\d{1,2}):(\d{2})$/.exec(ev.at || '');
+        const next = new Date(ev.iso + 'T00:00:00Z'); next.setUTCDate(next.getUTCDate() + 1);
+        const when = hm ? [`DTSTART:${d}T${hm[1].padStart(2, '0')}${hm[2]}00`] : [`DTSTART;VALUE=DATE:${d}`, `DTEND;VALUE=DATE:${next.toISOString().slice(0, 10).replace(/-/g, '')}`];
+        out.push('BEGIN:VEVENT', `UID:${ev.id}-${d}@invitation`, `DTSTAMP:${d}T000000Z`, ...when, `SUMMARY:${esc(ev.title)}`, `LOCATION:${esc(ev.where)}`, 'END:VEVENT');
+      }
+      out.push('END:VCALENDAR');
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([out.join('\r\n')], { type: 'text/calendar' })); a.download = 'save-the-dates.ics'; document.body.append(a); a.click(); a.remove();
     });
     let rz = 0;
     window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { const t = clock(); build(); renderAt(Math.min(t, DURATION)); }, 160); });

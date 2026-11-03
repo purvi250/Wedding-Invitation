@@ -117,11 +117,31 @@ VENUE_ADDRESS_LINES: [ ... ],   // how the address is split into lines on the ca
 EVENT_TIME: '',                 // empty = not shown.  e.g. '7:00 PM onwards'
 RSVP_DETAILS: '',               // empty = not shown.
 TEXT: { ... }                   // the sentence shown in each scene
+
+// the Programme, two days before the reception
+PROGRAMME_DAY: 'Thursday',
+PROGRAMME_DATE: '26th November 2026',
+PROGRAMME_EVENTS: [
+  { name: 'Sundarkand', time: '2:00 PM', at: '14:00', icon: 'diya' },
+  { name: 'Dinner', time: '8:00 PM', at: '20:00', icon: 'dinner' },
+],
+PROGRAMME_VENUE_ADDRESS: 'Ankit Vihar Colony, Lane No. 3, Nawada Road, Saharanpur – 247001',
 ```
 
 Save the file and refresh the browser. The monogram on the seal (K & P), the signature (“Kenvi & Puru”),
 the card, the closing line and the final screen all update by themselves.
 Empty fields are simply left out — no blank labels or placeholders ever appear.
+
+**The Programme** is placed so that no guest can miss it, even one who only glances at the video:
+* on the **envelope** (the first screen, and the first frame of the video, so it shows in WhatsApp previews),
+  both dates sit on a little paper plaque under the names;
+* in the film the invitation card **turns over** at 45 s, in a burst of golden light, to show the Programme
+  on its back;
+* the **closing frame** repeats both dates under “Kenvi & Puru”;
+* the **final web screen** shows the Programme and the Reception side by side, each with its own Directions
+  button, plus *Save the dates* (Sundarkand 2:00 PM and Dinner 8:00 PM as given, the reception as an all-day entry).
+
+To remove it everywhere, set `PROGRAMME_EVENTS: []`.
 
 Then make a new video: see section 7.
 
@@ -166,7 +186,7 @@ It is cut to the picture:
 * the melody lands on the groom's name at 11 s and on the bride's at 17 s;
 * the strings hush as the curtains close (28.5 s) and bloom when they open (30 s);
 * tabla tihais land exactly on the stage reveal (30 s) and on the final chord (57 s);
-* the music becomes light and readable while guests read the date and venue (39–51 s).
+* the music becomes light and readable while guests read the date and venue (39–51 s), with a wind-chime shimmer as the card turns over to the Programme (45 s).
 
 **How it is made.** Every note is written out in `tools/music/score.json`, and `tools/music/render.mjs` plays it with
 real recorded instruments, then mixes and masters it to −16 LUFS:
@@ -221,14 +241,14 @@ quick test; `--crf=20` makes a smaller file, `--crf=15` a larger, even cleaner o
 
 | Time | Scene | On screen |
 |---|---|---|
-| 0–3 s | Opening | A sealed blush envelope with the K & P wax seal opens |
+| 0–3 s | Opening | A sealed blush envelope with the K & P wax seal and both dates (Programme · Reception) opens |
 | 3–9 s | 1 · A magical beginning | Twilight palace garden · “A Beautiful Evening Awaits...” · the floral frame grows in |
 | 9–15 s | 2 · The groom | Lantern-lit palace courtyard · “Introducing the Groom — Puru Tyagi” |
 | 15–21 s | 3 · The bride | Terrace above the illuminated garden · “Introducing the Bride — Kenvi Dwivedi” |
 | 21–30 s | 4 · Togetherness | Floral ring in a blue-hour garden · “Two Beautiful Souls / One Special Evening / An Unforgettable Celebration” |
 | 30–39 s | 5 · The invitation | Velvet curtains part on the reception stage · names · “Cordially invite you to their Reception” · message |
-| 39–51 s | 6 · Date & venue | The invitation card: Reception · names · Saturday, 28 November 2026 · Hotel Royal Residency and address |
-| 51–59.5 s | 7 · Finale | The couple before the illuminated stage · closing lines · “Kenvi & Puru” · fade out |
+| 39–51 s | 6 · Date & venue | The invitation card: Reception · names · Saturday, 28 November 2026 · Hotel Royal Residency and address; at 45 s it turns over to the Programme: Thursday, 26th November 2026 · Sundarkand 2:00 PM · Dinner 8:00 PM · Ankit Vihar Colony, Nawada Road |
+| 51–59.5 s | 7 · Finale | The couple before the illuminated stage · closing lines · “Kenvi & Puru” with both dates · fade out |
 
 The scene times live in `script.js` (look for `const T =` and the numbered `/* ===== n · … ===== */` blocks).
 

@@ -134,28 +134,47 @@
       <p class="t-closing" data-closing="0" data-split="words"></p>
       <p class="t-closing t-closing-2" data-closing="1" data-split="words"></p>
       <h2 class="t-sign" data-sign></h2>
-      <p class="t-foot" data-foot></p>
+      <div class="t-foot" data-foot></div>
     </div>
   </div>
 
-  <!-- SCENE 6 · the invitation card -->
+  <!-- SCENE 6 · the invitation card: reception on the front; it turns over to the programme on the back -->
   <div id="cardLayer">
-    <article class="card" id="card">
-      <div class="card-floral tl"><img data-effect="corner-floral" alt=""></div>
-      <div class="card-floral br"><img data-effect="corner-floral" alt=""></div>
-      <div class="card-shine"></div>
-      <div class="card-body">
-        <p class="card-kicker" data-event-type></p>
-        <h2 class="card-names"><span data-name="bride"></span><span class="amp">&amp;</span><span data-name="groom"></span></h2>
-        <div class="card-rule"><i></i><b>&#10022;</b><i></i></div>
-        <p class="card-date" data-date></p>
-        <p class="card-time" data-time hidden></p>
-        <p class="card-label" data-text="venueLabel"></p>
-        <p class="card-venue" data-venue></p>
-        <p class="card-address" data-address></p>
-        <p class="card-rsvp" data-rsvp hidden></p>
+    <div class="card-glow" id="cardGlow"></div>
+    <div class="card-3d" id="card">
+      <div class="card-flip" id="cardFlip">
+        <article class="card card-face card-front">
+          <div class="card-floral tl"><img data-effect="corner-floral" alt=""></div>
+          <div class="card-floral br"><img data-effect="corner-floral" alt=""></div>
+          <div class="card-shine"></div>
+          <div class="card-body">
+            <p class="card-kicker" data-event-type></p>
+            <h2 class="card-names"><span data-name="bride"></span><span class="amp">&amp;</span><span data-name="groom"></span></h2>
+            <div class="card-rule"><i></i><b>&#10022;</b><i></i></div>
+            <p class="card-date" data-date></p>
+            <p class="card-time" data-time hidden></p>
+            <p class="card-label" data-text="venueLabel"></p>
+            <p class="card-venue" data-venue></p>
+            <p class="card-address" data-address></p>
+            <p class="card-rsvp" data-rsvp hidden></p>
+          </div>
+        </article>
+        <article class="card card-face card-back" data-prog>
+          <div class="card-floral tr"><img data-effect="corner-floral" alt=""></div>
+          <div class="card-floral bl"><img data-effect="corner-floral" alt=""></div>
+          <div class="card-shine"></div>
+          <div class="card-body">
+            <p class="card-kicker" data-prog-title></p>
+            <p class="cb-day" data-prog-day></p>
+            <p class="card-date cb-date" data-prog-date></p>
+            <div class="card-rule"><i></i><b>&#10022;</b><i></i></div>
+            <ul class="prog-rows cb-rows" data-prog-rows></ul>
+            <p class="card-label" data-text="venueLabel"></p>
+            <p class="card-address" data-prog-address></p>
+          </div>
+        </article>
       </div>
-    </article>
+    </div>
   </div>
 
   <div id="bloom" aria-hidden="true"></div>
@@ -177,6 +196,7 @@
     <div class="flap flap-t"><i></i></div>
     <div class="env-copy env-copy-top"><p class="env-kicker" data-text="envelopeKicker"></p></div>
     <div class="env-copy env-copy-bottom"><p class="env-names" data-sign></p></div>
+    <div class="env-copy env-dates dates dates-paper" data-dates hidden></div>
     <button id="seal" type="button" aria-label="Open the invitation">
       <span class="seal-ring"></span>
       <img data-effect="seal" alt="">
@@ -188,15 +208,28 @@
   <!-- final screen (website only) -->
   <div id="end" hidden>
     <div class="end-inner">
-      <p class="end-kicker" data-event-type></p>
       <h2 class="end-names" data-sign></h2>
-      <p class="end-date" data-date></p>
-      <p class="end-venue" data-venue></p>
-      <p class="end-address" data-address-inline></p>
+      <div class="end-rule"><i></i><b>&#10022;</b><i></i></div>
+      <div class="end-events">
+        <section class="end-event" data-prog>
+          <p class="end-kicker" data-prog-title></p>
+          <p class="end-date" data-prog-date-line></p>
+          <ul class="prog-rows end-rows" data-prog-rows></ul>
+          <p class="end-address" data-prog-address-inline></p>
+          <a class="end-map" id="btnMapProg" target="_blank" rel="noopener">Directions</a>
+        </section>
+        <section class="end-event">
+          <p class="end-kicker" data-event-type></p>
+          <p class="end-date" data-date></p>
+          <p class="end-time" data-time hidden></p>
+          <p class="end-venue" data-venue></p>
+          <p class="end-address" data-address-inline></p>
+          <a class="end-map" id="btnMap" target="_blank" rel="noopener">Directions</a>
+        </section>
+      </div>
       <div class="end-actions">
         <button type="button" id="btnReplay">Watch again</button>
-        <a id="btnMap" target="_blank" rel="noopener">Directions</a>
-        <button type="button" id="btnCal">Save the date</button>
+        <button type="button" id="btnCal">Save the dates</button>
       </div>
     </div>
   </div>

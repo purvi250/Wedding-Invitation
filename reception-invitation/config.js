@@ -26,8 +26,26 @@ window.INVITE_CONFIG = {
   EVENT_TIME: '',      // e.g. '7:00 PM onwards'
   RSVP_DETAILS: '',    // e.g. 'RSVP: Name — 98xxxxxxxx'
 
-  // Machine-readable date, used only for the "Save the date" calendar file on the final web screen.
+  // Machine-readable date, used only for the "Save the dates" calendar file on the final web screen.
   EVENT_DATE_ISO: '2026-11-28',
+
+  /* ---------- Programme: a second gathering, two days before the reception ----------
+     It is shown on the envelope, on the back of the invitation card (the card turns over in the film),
+     in the closing frame and on the final web screen. Set PROGRAMME_EVENTS to [] to hide it everywhere.
+     icon: 'diya' (oil lamp) or 'dinner' (cloche); anything else shows a small gold diamond. */
+  PROGRAMME_TITLE: 'Programme',
+  PROGRAMME_DAY: 'Thursday',
+  PROGRAMME_DATE: '26th November 2026',
+  PROGRAMME_DATE_ISO: '2026-11-26',   // used only for the calendar file
+  PROGRAMME_EVENTS: [
+    { name: 'Sundarkand', time: '2:00 PM', at: '14:00', icon: 'diya' },
+    { name: 'Dinner', time: '8:00 PM', at: '20:00', icon: 'dinner' },
+  ],
+  PROGRAMME_VENUE_ADDRESS: 'Ankit Vihar Colony, Lane No. 3, Nawada Road, Saharanpur – 247001',
+  PROGRAMME_VENUE_LINES: [
+    'Ankit Vihar Colony, Lane No. 3,',
+    'Nawada Road, Saharanpur – 247001',
+  ],
 
   /* ---------- Wording of each scene ---------- */
   TEXT: {
@@ -54,5 +72,5 @@ window.INVITE_CONFIG = {
   /* ---------- Options ---------- */
   SHOW_COUPLE_PORTRAIT: true,   // false = scene 4 shows the groom and bride illustrations side by side instead
   SHOW_DIRECTIONS_BUTTON: true, // "Directions" button (Google Maps search for the venue) on the final web screen
-  SHOW_CALENDAR_BUTTON: true,   // "Save the date" button (all-day calendar entry, no time) on the final web screen
+  SHOW_CALENDAR_BUTTON: true,   // "Save the dates" button on the final web screen (programme times as given; reception all-day)
 };
