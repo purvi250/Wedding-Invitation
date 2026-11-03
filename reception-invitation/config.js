@@ -61,6 +61,11 @@ window.INVITE_CONFIG = {
     closing: ['Your Presence Will Make Our Celebration More Special', 'We Look Forward to Celebrating With You!'],
   },
 
+  /* ---------- Sharing ---------- */
+  // Address of the published website. The PDF invitation (npm run invitation) uses it for its
+  // "Watch the animated invitation" button and QR code. Leave '' to leave both out.
+  SHARE_URL: 'https://purvi250.github.io/Wedding-Invitation/',
+
   /* ---------- Artwork and music (replace the files or point to new ones) ---------- */
   IMAGES: {
     groom: 'assets/groom.webp',    // transparent cut-out, full figure

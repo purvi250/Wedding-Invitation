@@ -14,10 +14,12 @@
     "render:all": "node render/render.mjs --format=vertical && node render/render.mjs --format=horizontal",
     "verify": "node render/verify.mjs",
     "music": "node tools/compose-music.mjs",
+    "invitation": "node tools/make-invitation.mjs",
     "backgrounds": "node tools/paint-backgrounds.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "^25.13.0",
+    "qrcode-generator": "2.0.4",
     "spessasynth_core": "4.3.22"
   }
 }

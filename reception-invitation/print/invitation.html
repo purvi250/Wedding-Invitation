@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1080">
+  <title>Invitation</title>
+  <!-- The PDF invitation (three pages) and the looping animated GIF (page 1) are made from this page by
+       tools/make-invitation.mjs (npm run invitation). All wording comes from ../config.js. -->
+  <link rel="stylesheet" href="print.css">
+</head>
+<body>
+
+  <!-- ===== page 1 · the hero (also the looping animated GIF) ===== -->
+  <section class="page hero" id="hero">
+    <img class="bg" src="../assets/backgrounds/hd/bluehour-sky.webp" alt="">
+    <img class="bg" src="../assets/backgrounds/hd/bluehour-garden.webp" alt="">
+    <div class="shade"></div>
+    <div class="halo"></div>
+    <div class="portrait">
+      <img class="ring" src="../assets/effects/hd/floral-ring.webp" alt="">
+      <img class="couple" data-char="couple" alt="Illustration of the couple together">
+      <img class="bed" src="../assets/effects/hd/rose-bed.webp" alt="">
+    </div>
+    <canvas class="fx" id="fx" width="1080" height="1920"></canvas>
+    <div class="frame"><i class="frame-line"></i><img class="corner tl" src="../assets/effects/hd/corner-floral.webp" alt=""><img class="corner tr" src="../assets/effects/hd/corner-floral.webp" alt=""><img class="corner bl" src="../assets/effects/hd/corner-floral.webp" alt=""><img class="corner br" src="../assets/effects/hd/corner-floral.webp" alt=""></div>
+    <header class="hero-top">
+      <p class="kicker" data-kicker></p>
+      <h1 class="names"><span class="gold shimmer" data-name="bride"></span><span class="amp">&amp;</span><span class="gold shimmer" data-name="groom"></span></h1>
+    </header>
+    <footer class="hero-bottom">
+      <p class="invite"><span data-invite-line></span><strong class="gold" data-event-type></strong></p>
+      <div class="dates" data-dates></div>
+      <a class="watch pdf-only" data-watch>&#9654;&nbsp; Tap to watch the animated invitation</a>
+    </footer>
+  </section>
+
+  <!-- ===== page 2 · the reception ===== -->
+  <section class="page detail" id="reception">
+    <img class="bg" src="../assets/backgrounds/hd/stage-back.webp" alt="">
+    <img class="bg" src="../assets/backgrounds/hd/stage-stage.webp" alt="">
+    <div class="shade deep"></div>
+    <p class="message" data-message></p>
+    <article class="card">
+      <img class="card-floral tl" src="../assets/effects/hd/corner-floral.webp" alt="">
+      <img class="card-floral br" src="../assets/effects/hd/corner-floral.webp" alt="">
+      <p class="card-kicker" data-event-type></p>
+      <h2 class="card-names"><span data-name="bride"></span><span class="amp">&amp;</span><span data-name="groom"></span></h2>
+      <div class="card-rule"><i></i><b>&#10022;</b><i></i></div>
+      <p class="card-date" data-date></p>
+      <p class="card-time" data-time hidden></p>
+      <p class="card-label" data-venue-label></p>
+      <p class="card-venue" data-venue></p>
+      <p class="card-address" data-address></p>
+      <p class="card-rsvp" data-rsvp hidden></p>
+    </article>
+    <a class="pill" data-map-reception>Directions</a>
+    <p class="page-foot"><span data-sign></span></p>
+  </section>
+
+  <!-- ===== page 3 · the programme, and the closing words ===== -->
+  <section class="page detail" id="programme" data-prog>
+    <img class="bg" src="../assets/backgrounds/hd/courtyard-sky.webp" alt="">
+    <img class="bg" src="../assets/backgrounds/hd/courtyard-palace.webp" alt="">
+    <div class="shade deep"></div>
+    <article class="card">
+      <img class="card-floral tr" src="../assets/effects/hd/corner-floral.webp" alt="">
+      <img class="card-floral bl" src="../assets/effects/hd/corner-floral.webp" alt="">
+      <p class="card-kicker" data-prog-title></p>
+      <p class="cb-day" data-prog-day></p>
+      <p class="card-date" data-prog-date></p>
+      <div class="card-rule"><i></i><b>&#10022;</b><i></i></div>
+      <ul class="prog-rows" data-prog-rows></ul>
+      <p class="card-label" data-venue-label></p>
+      <p class="card-address" data-prog-address></p>
+    </article>
+    <a class="pill" data-map-programme>Directions</a>
+    <div class="closing">
+      <p class="closing-line" data-closing="0"></p>
+      <p class="closing-sign gold" data-sign></p>
+      <div class="qr-block" data-qr-block>
+        <div class="qr" data-qr></div>
+        <p class="qr-caption">Scan or <a data-watch>tap here</a> to watch<br>the animated invitation</p>
+      </div>
+    </div>
+  </section>
+
+  <script src="../config.js"></script>
+  <script src="../node_modules/qrcode-generator/dist/qrcode.js"></script>
+  <script src="print.js"></script>
+</body>
+</html>

@@ -16,6 +16,13 @@ The same invitation as a video (59.5 seconds, with music):
 | [Vertical, small file](https://purvi250.github.io/Wedding-Invitation/reception-invitation/output/reception-invitation-whatsapp-720x1280.mp4) | Sending in WhatsApp chats |
 | [Horizontal, 1920 × 1080](https://purvi250.github.io/Wedding-Invitation/reception-invitation/output/reception-invitation-horizontal-1920x1080.mp4) | TVs, laptops, projectors |
 
+To send as files:
+
+| File | Best for |
+|---|---|
+| [Animated GIF](https://purvi250.github.io/Wedding-Invitation/reception-invitation/output/reception-invitation-animated.gif) | A looping animated invitation that plays by itself in chats and email |
+| [PDF invitation](https://purvi250.github.io/Wedding-Invitation/reception-invitation/output/reception-invitation.pdf) | Three pages with all the details, map links and a QR code to the animated invitation; prints well |
+
 ## Run it on your own computer
 
 You need [Node.js](https://nodejs.org). Open a terminal in this folder and type:

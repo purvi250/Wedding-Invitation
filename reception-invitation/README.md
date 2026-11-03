@@ -9,6 +9,7 @@ It comes in two forms that are generated from the *same* source, so they always 
 |---|---|---|
 | **A** | Interactive animated website (tap the wax seal to open) | `index.html` — start it with `Start Invitation.bat` |
 | **B** | Finished MP4 videos with music | `output/` folder |
+| **C** | A three-page PDF invitation and a looping animated GIF, for sending | `output/` folder |
 
 ### The commands at a glance
 
@@ -25,6 +26,7 @@ you opened in VS Code.
 | `npm run render:horizontal` | Renders the horizontal MP4. |
 | `npm run render:all` | Renders the vertical and the horizontal MP4. |
 | `npm run verify` | Checks the rendered videos and saves contact sheets in `output/qa/`. |
+| `npm run invitation` | Makes the PDF invitation and the animated GIF again (about 3 minutes). |
 | `npm run music` | Regenerates the soundtrack. |
 | `npm run backgrounds` | Repaints the backgrounds and decorations. |
 
@@ -46,6 +48,21 @@ or WhatsApp status instead of being split in two.
 
 > Tip: WhatsApp re-compresses videos sent the normal way. To send the *full-quality* file, attach it as a
 > **Document** instead of as a video.
+
+### The PDF and the animated GIF
+
+| File | Use it for |
+|---|---|
+| `reception-invitation-animated.gif` | **The animated invitation as a picture** (720 × 1280, about 3 MB). The cover of the invitation: the couple in the floral ring with drifting petals, fireflies and sparkles, and the gold names shimmering. It loops seamlessly every 8 seconds and plays by itself in WhatsApp, email and most apps, with no tap needed. |
+| `reception-invitation.pdf` | **The printable / forwardable invitation** (three phone-shaped pages, about 3.5 MB). 1 · the same cover; 2 · the reception card; 3 · the Programme card, the closing words and a QR code. “Directions” opens each venue in Google Maps, and “Tap to watch” / the QR code opens the animated website. The words stay sharp at any zoom, and the PDF prints well. |
+
+A PDF cannot move: no phone, WhatsApp or email PDF viewer plays animation. That is why the two files are a pair.
+Send the GIF for the animation and the PDF for the details. The PDF's button and QR code lead to the full
+animated invitation.
+
+Both are made from `print/invitation.html` with the wording in `config.js`, so they always match the film.
+Run **`npm run invitation`** after changing `config.js` (`-- --pdf` or `-- --gif` makes just one;
+`-- --width=540` makes a smaller GIF). The QR code and buttons point to `SHARE_URL` in `config.js`.
 
 ---
 
@@ -276,16 +293,18 @@ reception-invitation/
 ├─ render/
 │  ├─ render.mjs         website → MP4
 │  └─ verify.mjs         automatic checks + contact sheets
+├─ print/                the PDF invitation and animated GIF page (invitation.html, print.css, print.js)
 ├─ tools/
 │  ├─ serve.mjs          tiny local web server (npm run dev / preview)
 │  ├─ build-site.mjs     collects the website into dist/ (npm run build)
 │  ├─ compose-music.mjs  writes the soundtrack (npm run music)
+│  ├─ make-invitation.mjs  makes the PDF and the animated GIF (npm run invitation)
 │  ├─ music/             its score, instrument settings, renderer and the list of sound sources
 │  │                     (sounds/ is downloaded on first use and not committed)
 │  ├─ paint-backgrounds.mjs + paint/   paint every background and decoration from code
 │  └─ browser.mjs        finds Chrome / Edge
 ├─ dist/                 the website on its own, made by npm run build (safe to delete)
-└─ output/               the rendered videos
+└─ output/               the rendered videos, the PDF and the animated GIF
 ```
 
 The `Reception` folder above this one also has a small `package.json`. It only forwards the npm commands to this
@@ -339,3 +358,4 @@ tools, no renderer, no videos, and not your original artwork.
   * SoundFont player: spessasynth_core (Apache-2.0).
 * Fonts: Great Vibes, Cormorant Garamond, Cinzel — SIL Open Font License (see `assets/fonts/LICENSE.txt`).
 * Animation library: GSAP (free standard licence).
+* QR code in the PDF: qrcode-generator by Kazuhiko Arase (MIT licence).
