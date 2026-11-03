@@ -54,7 +54,7 @@ or WhatsApp status instead of being split in two.
 | File | Use it for |
 |---|---|
 | `reception-invitation-animated.gif` | **The animated invitation as a picture** (720 × 1280, about 3 MB). The cover of the invitation: the couple in the floral ring with drifting petals, fireflies and sparkles, and the gold names shimmering. It loops seamlessly every 8 seconds and plays by itself in WhatsApp, email and most apps, with no tap needed. |
-| `reception-invitation.pdf` | **The printable / forwardable invitation** (three phone-shaped pages, about 3.7 MB). 1 · the cover, with the hosts' invitation: “Er. Subodh Tyagi & Mrs. Poonam Tyagi cordially invite you to the Sundarkand & Wedding Reception”, above both dates; 2 · the reception card; 3 · the Programme card, the closing words and a QR code. “Directions” opens each venue in Google Maps, and “Tap to watch” / the QR code opens the animated website. The words stay sharp at any zoom, and the PDF prints well. |
+| `reception-invitation.pdf` | **The printable / forwardable invitation** (three phone-shaped pages, about 3.7 MB). 1 · the cover, with the hosts' invitation: “Er. Subodh Tyagi & Mrs. Poonam Tyagi cordially invite you to the Sundarkand & Wedding Reception”, above both dates; 2 · the reception card; 3 · the Programme card, the closing words and a QR code. Puru is named first throughout. “Directions” opens each venue in Google Maps, and “Tap to watch” / the QR code opens the animated website. The words stay sharp at any zoom, and the PDF prints well. |
 
 A PDF cannot move: no phone, WhatsApp or email PDF viewer plays animation. That is why the two files are a pair.
 Send the GIF for the animation and the PDF for the details. The PDF's button and QR code lead to the full
@@ -64,7 +64,8 @@ Both are made from `print/invitation.html` with the wording in `config.js`, so t
 Run **`npm run invitation`** after changing `config.js` (`-- --pdf` or `-- --gif` makes just one;
 `-- --width=540` makes a smaller GIF). The QR code and buttons point to `SHARE_URL` in `config.js`.
 The hosts' invitation comes from `PDF_HOSTS` and `PDF_HOSTS_INVITE` in `config.js` and appears only in the PDF: the website, the videos and the GIF
-keep the couple's own line. Set `PDF_HOSTS: []` to use the couple's line in the PDF too.
+keep the couple's own line. Set `PDF_HOSTS: []` to use the couple's line in the PDF too. `PDF_GROOM_FIRST: true`
+names Puru first throughout the PDF (“Puru Tyagi & Kenvi Dwivedi”, “Puru & Kenvi”).
 
 ---
 

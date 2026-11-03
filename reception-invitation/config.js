@@ -71,6 +71,7 @@ window.INVITE_CONFIG = {
   // the videos or in the animated GIF. Leave PDF_HOSTS as [] to use the couple's own line (inviteLine) instead.
   PDF_HOSTS: ['Er. Subodh Tyagi', 'Mrs. Poonam Tyagi'],
   PDF_HOSTS_INVITE: ['cordially invite you to the', 'Sundarkand & Wedding Reception'],
+  PDF_GROOM_FIRST: true,   // the PDF names the groom first (Puru Tyagi & Kenvi Dwivedi, "Puru & Kenvi")
 
   /* ---------- Artwork and music (replace the files or point to new ones) ---------- */
   IMAGES: {

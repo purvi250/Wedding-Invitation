@@ -17,7 +17,9 @@
 
   /* ------------------------------------------------------------------ content (same rules as the film) */
   const first = (n) => String(n || '').trim().split(/\s+/)[0] || '';
-  const SIGN = `${first(CFG.BRIDE_NAME)} & ${first(CFG.GROOM_NAME)}`;
+  // the PDF can name the groom first (PDF_GROOM_FIRST); the GIF keeps the film's order
+  const COUPLE = MODE === 'pdf' && CFG.PDF_GROOM_FIRST ? [CFG.GROOM_NAME, CFG.BRIDE_NAME] : [CFG.BRIDE_NAME, CFG.GROOM_NAME];
+  const SIGN = `${first(COUPLE[0])} & ${first(COUPLE[1])}`;
   const DATE_LINE = [CFG.EVENT_DAY, CFG.EVENT_DATE].filter(Boolean).join(', ');
   const PROG = (CFG.PROGRAMME_EVENTS || []).filter((e) => e && e.name);
   const HAS_PROG = PROG.length > 0;
@@ -35,7 +37,7 @@
   const put = (sel, value) => $$(sel).forEach((el) => { el.textContent = value || ''; });
   const lines = (sel, arr) => $$(sel).forEach((el) => { el.textContent = ''; arr.filter(Boolean).forEach((l) => { const s = document.createElement('span'); s.textContent = l; el.append(s); }); });
   put('[data-kicker]', TXT.envelopeKicker);
-  $$('[data-name]').forEach((el) => { el.textContent = el.dataset.name === 'bride' ? CFG.BRIDE_NAME : CFG.GROOM_NAME; });
+  $$('[data-name]').forEach((el) => { el.textContent = COUPLE[el.dataset.name === 'bride' ? 0 : 1]; });
   put('[data-invite-line]', TXT.inviteLine);
   put('[data-event-type]', CFG.EVENT_TYPE);
   put('[data-date]', DATE_LINE);
