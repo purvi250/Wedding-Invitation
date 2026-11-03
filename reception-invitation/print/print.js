@@ -48,6 +48,22 @@
   $$('[data-time]').forEach((el) => { el.hidden = !CFG.EVENT_TIME; el.textContent = CFG.EVENT_TIME || ''; });
   $$('[data-rsvp]').forEach((el) => { el.hidden = !CFG.RSVP_DETAILS; el.textContent = CFG.RSVP_DETAILS || ''; });
 
+  // the hosts' invitation replaces the couple's line on the cover of the PDF (not in the GIF)
+  const HOSTS = (CFG.PDF_HOSTS || []).filter(Boolean);
+  if (MODE === 'pdf' && HOSTS.length) {
+    $$('[data-hosts-names]').forEach((el) => HOSTS.forEach((h, i) => {
+      if (i) { const amp = document.createElement('i'); amp.textContent = i === HOSTS.length - 1 ? '&' : ','; el.append(amp); }
+      const s = document.createElement('span'); s.textContent = h; el.append(s);
+    }));
+    const [line, events] = CFG.PDF_HOSTS_INVITE || [];
+    $$('[data-hosts-invite]').forEach((el) => {
+      if (line) { const s = document.createElement('span'); s.textContent = line; el.append(s); }
+      if (events) { const b = document.createElement('strong'); b.className = 'gold'; b.textContent = events; el.append(b); }
+    });
+    $$('.invite').forEach((el) => el.remove());
+    document.body.classList.add('has-hosts');
+  } else $$('[data-hosts]').forEach((el) => el.remove());
+
   // programme
   put('[data-prog-title]', CFG.PROGRAMME_TITLE || 'Programme');
   put('[data-prog-day]', CFG.PROGRAMME_DAY);
@@ -102,7 +118,9 @@
 
   function mulberry32(a) { return function () { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
   const R = mulberry32(20261126);
-  const W = 1080, H = 1920, CX = W / 2, CY = H * 0.486, RING = 420;
+  const W = 1080, H = 1920, CX = W / 2, RING = 420;
+  // the sparkles circle the portrait wherever print.css puts it (it sits higher on the PDF cover with the hosts)
+  const CY = (() => { const p = $('.portrait'), h = $('#hero'); return p && h ? p.getBoundingClientRect().top - h.getBoundingClientRect().top + p.offsetHeight / 2 : H * 0.486; })();
   const n = (k) => 1 + Math.floor(R() * k);   // whole number of cycles per loop, so every motion repeats exactly
   const PETALS = Array.from({ length: 15 }, () => ({ k: Math.floor(R() * 6), x: R(), y: R() * 1.25, s: 30 + R() * 34, sway: 0.015 + R() * 0.03, m: n(2), ph: R() * TAU, rq: (R() < 0.5 ? -1 : 1) * n(2), r0: R() * TAU, fq: n(3), a: 0.72 + R() * 0.28 }));
   const FLIES = Array.from({ length: 24 }, () => ({ x: 0.08 + R() * 0.84, y: 0.26 + R() * 0.48, ax: 0.012 + R() * 0.025, ay: 0.01 + R() * 0.02, m1: n(2), m2: n(2), p1: R() * TAU, p2: R() * TAU, tq: n(3), pt: R() * TAU, s: 22 + R() * 26 }));
@@ -116,6 +134,10 @@
     for (const rot of [0, Math.PI / 2]) { c.save(); c.translate(h, h); c.rotate(rot); const lg = c.createLinearGradient(-h, 0, h, 0); lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(0.5, 'rgba(255,253,240,1)'); lg.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = lg; c.beginPath(); c.moveTo(-h, 0); c.quadraticCurveTo(0, -s * 0.035, h, 0); c.quadraticCurveTo(0, s * 0.035, -h, 0); c.fill(); c.restore(); }
   });
   const shimmers = $$('.shimmer');
+  // the PDF is a single still frame, so it leaves out any petal that would sit on top of the words
+  const hero = $('#hero').getBoundingClientRect();
+  const CLEAR = MODE === 'pdf' ? $$('#hero .kicker, #hero .names, #hero .hosts > *, #hero .invite, #hero .dates, #hero .watch').map((el) => { const b = el.getBoundingClientRect(); return { l: b.left - hero.left, r: b.right - hero.left, t: b.top - hero.top, b: b.bottom - hero.top }; }) : [];
+  const onWords = (x, y, pad) => CLEAR.some((b) => x > b.l - pad && x < b.r + pad && y > b.t - pad && y < b.b + pad);
 
   function seek(t) {
     const p = ((t % LOOP) + LOOP) % LOOP / LOOP;   // 0..1 through the loop
@@ -127,6 +149,7 @@
     g.globalCompositeOperation = 'source-over';
     if (petals.naturalWidth) for (const q of PETALS) {
       const y = ((q.y + 1.25 * p) % 1.25) - 0.12, x = q.x + q.sway * Math.sin(TAU * q.m * p + q.ph), flip = Math.cos(TAU * q.fq * p + q.ph);
+      if (onWords(x * W, y * H, q.s / 2)) continue;
       g.save(); g.globalAlpha = q.a; g.translate(x * W, y * H); g.rotate(q.r0 + TAU * q.rq * p); g.scale(1, 0.22 + 0.78 * Math.abs(flip));
       g.drawImage(petals, q.k * 160, 0, 160, 160, -q.s / 2, -q.s / 2, q.s, q.s); g.restore();
     }

@@ -66,6 +66,12 @@ window.INVITE_CONFIG = {
   // "Watch the animated invitation" button and QR code. Leave '' to leave both out.
   SHARE_URL: 'https://purvi250.github.io/Wedding-Invitation/',
 
+  /* ---------- PDF invitation only ---------- */
+  // The hosts' invitation on the cover of the PDF (npm run invitation). It is not shown on the website, in
+  // the videos or in the animated GIF. Leave PDF_HOSTS as [] to use the couple's own line (inviteLine) instead.
+  PDF_HOSTS: ['Er. Subodh Tyagi', 'Mrs. Poonam Tyagi'],
+  PDF_HOSTS_INVITE: ['cordially invite you to the', 'Sundarkand & Wedding Reception'],
+
   /* ---------- Artwork and music (replace the files or point to new ones) ---------- */
   IMAGES: {
     groom: 'assets/groom.webp',    // transparent cut-out, full figure
