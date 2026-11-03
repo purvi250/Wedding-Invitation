@@ -24,9 +24,24 @@ a { color: inherit; text-decoration: none; }
 
 /* Making the PDF light: tools/make-invitation.mjs first photographs each page's artwork alone (.art: words and
    vector decorations hidden), then prints the page with that one JPEG behind the words (.flat: artwork layers
-   hidden), so the text, icons and buttons stay crisp vectors with working links. */
-.art .page p, .art .page h1, .art .page h2, .art .page li, .art .dates, .art .pill, .art .watch, .art .qr-block, .art .card-rule { visibility: hidden; }
+   hidden), so the text, icons and buttons stay crisp vectors with working links.
+   The soft shadows round the words belong to the artwork too: the words are made see-through in .art (their
+   shadows still paint) and lose their shadows in .flat. A blurred shadow on PDF text becomes a masked image,
+   and some phone viewers ignore the mask and paint it as a solid box over the neighbouring letters (the "i"
+   of "Tyagi" next to the "&" disappeared that way). The gold words are photographed whole (gold and shadow)
+   and printed again on top, so they show even in a viewer that cannot draw the gold. */
+.art .page :is(p, h1, h2, li), .art .page :is(p, h1, h2, li) * { color: transparent !important; -webkit-text-fill-color: transparent !important; }
+.art .watch { background: none; color: transparent; }
+.art .qr { background: none; }
+.art .qr svg, .art .qr-caption, .art .pill, .art .prog-ic, .art .prog-dots { visibility: hidden; }
 .flat .page > .bg, .flat .page > .shade, .flat .halo, .flat .portrait, .flat .fx, .flat .frame, .flat .card-floral { visibility: hidden; }
+.flat .page :is(p, h1, h2, li), .flat .page :is(p, h1, h2, li) * { text-shadow: none !important; filter: none !important; }
+.flat .watch { box-shadow: none; }
+.flat .qr { box-shadow: 0 0 0 1px rgba(236, 204, 136, 0.8); }
+/* see-through gradients (the dates panel, the gold dividers, the light on the names) are photographed too */
+.flat .dates { background: none; border-color: transparent; box-shadow: none; }
+.flat .dt-sep, .flat .card-rule { visibility: hidden; }
+.flat .shimmer { background-image: var(--gold-text); background-size: 100% 100%; }
 .flat .card { background: transparent; box-shadow: none; }
 .flat .card::before, .flat .card::after { display: none; }
 .page { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--night) center / cover no-repeat; break-after: page; page-break-after: always; }
@@ -79,6 +94,7 @@ a { color: inherit; text-decoration: none; }
 .dt-sep { position: relative; align-self: stretch; width: 1px; margin: 0 calc(var(--u) * 2.6); background: linear-gradient(180deg, rgba(236, 204, 136, 0), rgba(236, 204, 136, 0.9) 22%, rgba(236, 204, 136, 0.9) 78%, rgba(236, 204, 136, 0)); }
 .dt-sep::after { content: ''; position: absolute; left: 50%; top: 50%; width: calc(var(--u) * 1.1); height: calc(var(--u) * 1.1); margin: calc(var(--u) * -0.55) 0 0 calc(var(--u) * -0.55); transform: rotate(45deg); background: linear-gradient(135deg, #fff2c6, #c9a25a); }
 .watch { display: inline-block; margin-top: calc(var(--u) * 2); padding: calc(var(--u) * 1.4) calc(var(--u) * 3.4); font: 600 calc(var(--u) * 2.15) / 1 var(--caps); letter-spacing: 0.16em; text-transform: uppercase; color: #1a1638; background: linear-gradient(180deg, #f8e6a6, #d9aa52); border-radius: 999px; box-shadow: 0 calc(var(--u) * 0.6) calc(var(--u) * 2) rgba(0, 0, 0, 0.4); }
+.watch .play { display: inline-block; width: 0.95em; height: 0.95em; margin: -0.2em 0.9em 0 0; vertical-align: middle; fill: currentColor; }
 
 /* ---------- pages 2–3 · details ---------- */
 .detail { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
@@ -103,6 +119,7 @@ a { color: inherit; text-decoration: none; }
 .card-rule i { width: calc(var(--u) * 17); height: calc(var(--u) * 0.12); background: linear-gradient(90deg, rgba(201, 162, 90, 0), #c9a25a); }
 .card-rule i:last-child { transform: scaleX(-1); }
 .card-rule b { font-size: calc(var(--u) * 2.2); font-weight: 400; color: #c9a25a; line-height: 1; }
+.card-rule svg { display: block; width: 1em; height: 1em; fill: currentColor; }
 .card-date { font: 600 calc(var(--u) * 6.1) / 1.25 var(--serif); color: #4a2330; }
 .card-time { margin-top: calc(var(--u) * 0.6); font: 500 calc(var(--u) * 3.9) / 1.3 var(--serif); color: #5a3a45; }
 .card-label { margin-top: calc(var(--u) * 4.4); font: 600 calc(var(--u) * 3) / 1.2 var(--caps); letter-spacing: 0.46em; margin-right: -0.46em; text-transform: uppercase; color: #a9813a; }
